@@ -212,7 +212,10 @@ func (r *GitRepo) LatestVersion() string {
 func (r *GitRepo) retrieveBranchInfo() error {
 	id, err := r.repo.GetBranchCommitID(r.branch)
 	if err != nil {
-		return fmt.Errorf("error getting head commit: %s ", err.Error())
+		id, err = r.repo.GetRemoteBranchCommitID(r.branch)
+		if err != nil {
+			return fmt.Errorf("error getting commit for branch %s: %s", r.branch, err.Error())
+		}
 	}
 
 	r.branchID = id
